@@ -37,7 +37,7 @@ export default class FlipClock extends React.Component {
 	// 		--------------------------------		--------------------------------		---------
 
 	updateTime() {
-		const { type, count_to } = this.props;
+		const { type, count_to, count_from } = this.props;
 
 		let units = [];
 
@@ -56,8 +56,19 @@ export default class FlipClock extends React.Component {
 			units.minutes = time_diff>0 ? Math.floor( (time_diff/1000/60) % 60 ) : 0;
 			units.seconds = time_diff>0 ? Math.floor( (time_diff/1000) % 60 ) : 0;
 			
-		} 
-		else if (type=='clock') {
+		} if (type=='countup') {
+
+			var date_to_arr = count_from.split(/[^0-9]/);
+			const time_then = (new Date (date_to_arr[0],date_to_arr[1]-1,date_to_arr[2],date_to_arr[3],date_to_arr[4]));
+
+			units.years = time_then.getYear()-100;
+			units.months = time_then.getMonth()+1;
+			units.days = time_then.getDate();
+			units.hours = time_then.getHours();
+			units.minutes = time_then.getMinutes();
+			units.seconds = time_then.getSeconds();
+			
+		} else if (type=='clock') {
 
 			const time_now = new Date;
 
@@ -87,7 +98,7 @@ export default class FlipClock extends React.Component {
 
 	render() {
 
-		const { type, count_to, units } = this.props;
+		const { type, count_to, count_from, units } = this.props;
 
 		const show_units = units ? 
 					units
